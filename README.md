@@ -3,6 +3,8 @@
 ## Description
 
 ## Team
+* Zach Gittelman
+* Dan Witte (danwitte)
 
 ## Prototype
 
