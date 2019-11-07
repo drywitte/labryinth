@@ -26,4 +26,4 @@ Forget solving puzzles with your brain, solve puzzles with your muscles. We're s
 
 Setup: Users will need to attach 6 electrodes, 3 to each arm. Once the electrodes are connected, the user will to test their ability to rotate the servos and get use to the controls. 
 
-Play: Once users are ready to play, they (or possibly someone else) will need to drop the marble in the maze. The left arm EMG will controll the Y axis, the right arm EMG will control the right axis. Flexing will increase the angle, relaxing the muscle will decrease the angle. Users lose if they marble falls through a hole or they get too tired of flexing :muscle:. Users win if they manage to get the marble to the end of the maze.
+Play: Once users are ready to play, they (or possibly someone else) will need to drop the marble in the maze. The left arm EMG will controll the Y axis, the right arm EMG will control the right axis. Flexing will increase the angle, relaxing the muscle will decrease the angle. Users lose if the marble falls through a hole or they get too tired of flexing :muscle:. Users win if they manage to get the marble to the end of the maze.
