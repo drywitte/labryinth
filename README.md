@@ -10,7 +10,7 @@ Forget solving puzzles with your brain, solve puzzles with your muscles. We're s
 * Dan Witte (danwitte)
 
 ## Prototype
-
+![Diagram](labryinth%20diagram.png)
 
 
 ## Parts
