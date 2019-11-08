@@ -12,6 +12,9 @@ Forget solving puzzles with your brain, solve puzzles with your muscles. We're s
 ## Prototype
 ![Diagram](labryinth%20diagram.png)
 
+We're gonnna need a bigger cord
+![Prototype](prototype.jpg)
+
 
 ## Parts
 
