@@ -1,4 +1,4 @@
-# labryinth
+# labyrinth
 
 ## Description
 
