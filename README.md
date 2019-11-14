@@ -34,3 +34,5 @@ Play: Once users are ready to play, they (or possibly someone else) will need to
 ## Progress
 ![Zach is EMG'd up](IMG_0815.jpg)
 ![Measuring signals](IMG_0818.jpg)
+
+[Single servo hookup](https://photos.app.goo.gl/kSsvtbHaXER2PTeY9)
