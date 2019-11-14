@@ -80,18 +80,18 @@ int kernelize(int curr_movement) {
   int majority = -1;
   if (stopped_count > majority) {
     majority = stopped_count;
-    movement = stopped;
+    curr_movement = stopped;
   }
   if (clockwise_count > majority) {
     majority = clockwise_count;
-    movement = clockwise;
+    curr_movement = clockwise;
   }
   if (counterclockwise_count > majority) {
     majority = counterclockwise_count;
-    movement = counterclockwise;
+    curr_movement = counterclockwise;
   }
 
-  return movement;
+  return curr_movement;
 }
 
 void loop() {
