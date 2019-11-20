@@ -1,14 +1,18 @@
 #include <Servo.h>
 
-Servo myservo;  // create servo object to control a servo
+Servo servoRoll;  // create servo object to control a servo
+Servo servoPitch;  // create servo object to control a servo
+
 
 // Reading
-int sensorPin = A0;
-int sensorValue;
+int rollSensorPin = A0;
+int pitchSensorPin = A1;
 
 // Writing
-int servoPin = 9;
-int servoValue;
+int servoRollPin = 10;
+int servoPitchPin = 11;
+
+//int servoValue;
 
 // Servo callibration
 int stopped = 88;
@@ -17,40 +21,69 @@ int counterclockwise = 90;
 
 // Kernelize values
 int window_size = 5;
-int window[5];
-int window_filled = 0;
+
+int roll_window[5];
+int roll_window_filled = 0;
+
+int pitch_window[5];
+int pitch_window_filled = 0;
+
+
+
+int bounds[] = {220, 400};
 
 void setup() {
-  myservo.attach(servoPin);  // attaches the servo on pin 9 to the servo object
+  servoPitch.attach(servoRollPin);  // attaches the servo on pin 10 to the servo object
+  servoPitch.attach(servoPitchPin);  // attaches the servo on pin 9 to the servo object
   Serial.begin(9600);
 }
 
-int getMovementDirection() {
+void printSensorValue(int flexType) {
+  
+}
+
+int getMovementDirection(int sensorPin, int bounds[]) {
   // Read EMG
   int movement;
-  sensorValue = analogRead(sensorPin);
-  if (sensorValue < 220) {
-    Serial.println("no flex " + String(sensorValue));
+  int sensorValue = analogRead(sensorPin);
+  if (sensorValue < bounds[0]) {
+    if (sensorPin == rollSensorPin) {
+      Serial.println("Roll: no flex " + String(sensorValue));
+    }
+    else {
+      Serial.println("                                   Pitch: no flex " + String(sensorValue));
+    }
+    
     movement = stopped;
   }
-  else if (sensorValue < 400) {
-    Serial.println("half flex " + String(sensorValue));
+  else if (sensorValue < bounds[1]) {
+    if (sensorPin == rollSensorPin) {
+      Serial.println("Roll: half flex " + String(sensorValue));
+    }
+    else {
+      Serial.println("                                   Pitch: half flex " + String(sensorValue));
+    }
     movement = counterclockwise;
   }
   else {
-    Serial.println("full flex " + String(sensorValue));
+    if (sensorPin == rollSensorPin) {
+      Serial.println("Roll: full flex " + String(sensorValue));
+    }
+    else {
+      Serial.println("                                   Pitch: full flex " + String(sensorValue));
+    }
     movement = clockwise;
   }
   return movement;
 }
 
-int kernelize(int curr_movement) {
+int kernelize(int curr_movement, int window[], int* window_filled) {
   
   // Fill window
   if (window_filled < window_size) {
     // Fill window
-    window[window_filled] = curr_movement;
-    window_filled++;
+    window[*window_filled] = curr_movement;
+    *window_filled++;
     return -1;
   }
 
@@ -97,15 +130,22 @@ int kernelize(int curr_movement) {
 void loop() {
 
   // Get current movement
-  int curr_movement = getMovementDirection();
+  int roll_curr_movement = getMovementDirection(rollSensorPin, bounds);
+  int pitch_curr_movement = getMovementDirection(pitchSensorPin, bounds);
 
   // Determine majority average of window
-  int maj_movement = kernelize(curr_movement);
-  if (maj_movement == -1) {
+  int roll_maj_movement = kernelize(roll_curr_movement, roll_window, &roll_window_filled);
+  int pitch_maj_movement = kernelize(pitch_curr_movement, pitch_window, &pitch_window_filled);
+
+  if (roll_maj_movement == -1) {
+    return;
+  }
+  if (pitch_maj_movement == -1) {
     return;
   }
   
   // Write to servo                 
-  myservo.write(maj_movement);
+  servoRoll.write(80/*roll_maj_movement*/); // TODO: THIS DOES NOT WORK
+  servoPitch.write(pitch_maj_movement);
   delay(15);                           // waits for the servo to get there
 }
