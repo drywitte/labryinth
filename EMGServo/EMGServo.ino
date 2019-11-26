@@ -17,15 +17,9 @@ int servoPitchPin = 11;
 int calib_size = 5;
 
 // Roll Servo callibration
-//int roll_clockwise = 85;
-//int roll_stopped = 91;
-//int roll_counterclockwise = 97;
 int roll_calib[5] = {82, 85, 91, 97, 100};
 
 // Pitch Servo calibration
-//int pitch_clockwise = 82;
-//int pitch_stopped = 88;
-//int pitch_counterclockwise = 93;
 int pitch_calib[5] = {79, 82, 88, 93, 96};
 
 // Kernelize values
@@ -54,7 +48,6 @@ void printSensorValue(int flexType) {
 int getMovementDirection(int sensorPin, int bounds[]) {
   
   // Get calibration dependent on servos
-//  int stopped, clockwise, counterclockwise;
   int* calib = calibration(sensorPin);
   
   // Read EMG
@@ -77,39 +70,6 @@ int getMovementDirection(int sensorPin, int bounds[]) {
   
   int movement = calib[idx];
   return movement;
-//  
-//  int mid = calib_size/2;
-//  for (int i = 0; i < calib_size; i++) {
-//
-//  }
-//  if (sensorValue < bounds[0]) {
-//    if (sensorPin == rollSensorPin) {
-//      
-//    }
-//    else {
-//      
-//    }
-//    movement = calib[0];
-//  }
-//  else if (sensorValue < bounds[1]) {
-//    if (sensorPin == rollSensorPin) {
-//      Serial.println("Roll: stopped 0 " + String(sensorValue));
-//    }
-//    else {
-//      Serial.println("                                   Pitch: stopped 0 " + String(sensorValue));
-//    }
-//    movement = calib[1];
-//  }
-//  else {
-//    if (sensorPin == rollSensorPin) {
-//      Serial.println("Roll: forward 1 " + String(sensorValue));
-//    }
-//    else {
-//      Serial.println("                                   Pitch: forward 1 " + String(sensorValue));
-//    }
-//    movement = calib[2];
-//  }
-//  return movement;
 }
 
 int* calibration(int sensorPin) {
@@ -157,19 +117,6 @@ int kernelize(int curr_movement, int window[], int* window_filled, int sensorPin
       majority_movement = calib[i];
     }
   }
-  
-//  if (stopped_count > majority) {
-//    majority = stopped_count;
-//    curr_movement = stopped;
-//  }
-//  if (clockwise_count > majority) {
-//    majority = clockwise_count;
-//    curr_movement = clockwise;
-//  }
-//  if (counterclockwise_count > majority) {
-//    majority = counterclockwise_count;
-//    curr_movement = counterclockwise;
-//  }
 
   return majority_movement;
 }
