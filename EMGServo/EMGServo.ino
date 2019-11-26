@@ -14,27 +14,36 @@ int servoPitchPin = 11;
 
 //int servoValue;
 
-// Servo callibration
-int stopped = 88;
-int clockwise = 85;
-int counterclockwise = 90;
+int calib_size = 5;
+
+// Roll Servo callibration
+//int roll_clockwise = 85;
+//int roll_stopped = 91;
+//int roll_counterclockwise = 97;
+int roll_calib[5] = {82, 85, 91, 97, 100};
+
+// Pitch Servo calibration
+//int pitch_clockwise = 82;
+//int pitch_stopped = 88;
+//int pitch_counterclockwise = 93;
+int pitch_calib[5] = {79, 82, 88, 93, 96};
 
 // Kernelize values
-int window_size = 5;
+int window_size = 1;
 
-int roll_window[5];
+int roll_window[1];
 int roll_window_filled = 0;
 
-int pitch_window[5];
+int pitch_window[1];
 int pitch_window_filled = 0;
 
 
-
-int bounds[] = {220, 400};
+int bounds_size = 4;
+int bounds[4] = {150, 220, 500, 600};
 
 void setup() {
-  servoPitch.attach(servoRollPin);  // attaches the servo on pin 10 to the servo object
   servoPitch.attach(servoPitchPin);  // attaches the servo on pin 9 to the servo object
+  servoRoll.attach(servoRollPin);  // attaches the servo on pin 10 to the servo object
   Serial.begin(9600);
 }
 
@@ -43,41 +52,76 @@ void printSensorValue(int flexType) {
 }
 
 int getMovementDirection(int sensorPin, int bounds[]) {
+  
+  // Get calibration dependent on servos
+//  int stopped, clockwise, counterclockwise;
+  int* calib = calibration(sensorPin);
+  
   // Read EMG
-  int movement;
+  int idx = 0;
   int sensorValue = analogRead(sensorPin);
-  if (sensorValue < bounds[0]) {
-    if (sensorPin == rollSensorPin) {
-      Serial.println("Roll: no flex " + String(sensorValue));
+  for (int i = 0; i < bounds_size; ++i) {
+    if (sensorValue > bounds[i]) {
+      idx = i+1;
+    }
+  }
+
+  // Print Flex
+  int mid = calib_size/2;
+  if (sensorPin == rollSensorPin) {
+      Serial.println("Roll: " + String(idx - mid) + " " + String(sensorValue));
     }
     else {
-      Serial.println("                                   Pitch: no flex " + String(sensorValue));
-    }
-    
-    movement = stopped;
-  }
-  else if (sensorValue < bounds[1]) {
-    if (sensorPin == rollSensorPin) {
-      Serial.println("Roll: half flex " + String(sensorValue));
-    }
-    else {
-      Serial.println("                                   Pitch: half flex " + String(sensorValue));
-    }
-    movement = counterclockwise;
-  }
-  else {
-    if (sensorPin == rollSensorPin) {
-      Serial.println("Roll: full flex " + String(sensorValue));
-    }
-    else {
-      Serial.println("                                   Pitch: full flex " + String(sensorValue));
-    }
-    movement = clockwise;
-  }
+      Serial.println("                                   Pitch: " + String(idx - mid) + " " + String(sensorValue));
+   }
+  
+  int movement = calib[idx];
   return movement;
+//  
+//  int mid = calib_size/2;
+//  for (int i = 0; i < calib_size; i++) {
+//
+//  }
+//  if (sensorValue < bounds[0]) {
+//    if (sensorPin == rollSensorPin) {
+//      
+//    }
+//    else {
+//      
+//    }
+//    movement = calib[0];
+//  }
+//  else if (sensorValue < bounds[1]) {
+//    if (sensorPin == rollSensorPin) {
+//      Serial.println("Roll: stopped 0 " + String(sensorValue));
+//    }
+//    else {
+//      Serial.println("                                   Pitch: stopped 0 " + String(sensorValue));
+//    }
+//    movement = calib[1];
+//  }
+//  else {
+//    if (sensorPin == rollSensorPin) {
+//      Serial.println("Roll: forward 1 " + String(sensorValue));
+//    }
+//    else {
+//      Serial.println("                                   Pitch: forward 1 " + String(sensorValue));
+//    }
+//    movement = calib[2];
+//  }
+//  return movement;
 }
 
-int kernelize(int curr_movement, int window[], int* window_filled) {
+int* calibration(int sensorPin) {
+  if (sensorPin == rollSensorPin) {
+    return roll_calib;
+  }
+  else {
+    return pitch_calib;
+  }
+}
+
+int kernelize(int curr_movement, int window[], int* window_filled, int sensorPin) {
   
   // Fill window
   if (window_filled < window_size) {
@@ -93,38 +137,41 @@ int kernelize(int curr_movement, int window[], int* window_filled) {
   }
   window[window_size-1] = curr_movement;
 
-  // Count to determine majority of window
-  int stopped_count = 0;
-  int clockwise_count = 0;
-  int counterclockwise_count = 0;
+  // Bucket sensor values into calibration types
+  int* calib = calibration(sensorPin);
+  int calib_counts[5] = {0, 0, 0, 0, 0};
   for (int i = 0; i < window_size; ++i) {
-    if (window[i] == stopped) {
-      stopped_count++;
-    }
-    else if (window[i] == clockwise) {
-      clockwise_count++;
-    }
-    else {
-      counterclockwise_count++;
+    for (int j = 0; j < calib_size; ++j) {
+      if (window[i] == calib[j]) {
+        calib_counts[j]++;
+      }
     }
   }
 
   // Determine majority
   int majority = -1;
-  if (stopped_count > majority) {
-    majority = stopped_count;
-    curr_movement = stopped;
+  int majority_movement = -1;
+  for (int i = 0; i < calib_size; ++i) {
+    if (calib_counts[i] > majority) {
+      majority = calib_counts[i];
+      majority_movement = calib[i];
+    }
   }
-  if (clockwise_count > majority) {
-    majority = clockwise_count;
-    curr_movement = clockwise;
-  }
-  if (counterclockwise_count > majority) {
-    majority = counterclockwise_count;
-    curr_movement = counterclockwise;
-  }
+  
+//  if (stopped_count > majority) {
+//    majority = stopped_count;
+//    curr_movement = stopped;
+//  }
+//  if (clockwise_count > majority) {
+//    majority = clockwise_count;
+//    curr_movement = clockwise;
+//  }
+//  if (counterclockwise_count > majority) {
+//    majority = counterclockwise_count;
+//    curr_movement = counterclockwise;
+//  }
 
-  return curr_movement;
+  return majority_movement;
 }
 
 void loop() {
@@ -134,8 +181,8 @@ void loop() {
   int pitch_curr_movement = getMovementDirection(pitchSensorPin, bounds);
 
   // Determine majority average of window
-  int roll_maj_movement = kernelize(roll_curr_movement, roll_window, &roll_window_filled);
-  int pitch_maj_movement = kernelize(pitch_curr_movement, pitch_window, &pitch_window_filled);
+  int roll_maj_movement = kernelize(roll_curr_movement, roll_window, &roll_window_filled, rollSensorPin);
+  int pitch_maj_movement = kernelize(pitch_curr_movement, pitch_window, &pitch_window_filled, pitchSensorPin);
 
   if (roll_maj_movement == -1) {
     return;
@@ -145,7 +192,7 @@ void loop() {
   }
   
   // Write to servo                 
-  servoRoll.write(80/*roll_maj_movement*/); // TODO: THIS DOES NOT WORK
+  servoRoll.write(roll_maj_movement); 
   servoPitch.write(pitch_maj_movement);
   delay(15);                           // waits for the servo to get there
 }
