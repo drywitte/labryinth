@@ -42,3 +42,9 @@ Play: Once users are ready to play, they (or possibly someone else) will need to
 [Single servo hookup](https://photos.app.goo.gl/kSsvtbHaXER2PTeY9)
 
 [Two servos hooked up](https://photos.app.goo.gl/J16m6d5j8TJG6g228)
+
+## Lessons learned
+
+* Initially we tried a moving average of signals to determine which way to move, however through playing the game we found that it was better to be more responsive and subject to noise than less responsive and smooth.
+* Through playing we also found that it was beneficial to have 2 speeds for each movement direction, allowing for better control.
+* Quality soldering will save you hours of pain down the road
