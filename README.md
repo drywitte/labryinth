@@ -33,8 +33,12 @@ Play: Once users are ready to play, they (or possibly someone else) will need to
 
 ## Progress
 
+[EMG setup was a struggle](https://photos.app.goo.gl/P11KadpmMwnDEAYr6)
+
 ![Zach is EMG'd up](IMG_0815.jpg)
+
 ![Measuring signals](IMG_0818.jpg)
 
 [Single servo hookup](https://photos.app.goo.gl/kSsvtbHaXER2PTeY9)
+
 [Two servos hooked up](https://photos.app.goo.gl/J16m6d5j8TJG6g228)
