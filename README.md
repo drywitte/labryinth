@@ -43,7 +43,26 @@ Play: Once users are ready to play, they (or possibly someone else) will need to
 
 [Two servos hooked up](https://photos.app.goo.gl/J16m6d5j8TJG6g228)
 
+After testing the mechanics of the game we updated our interaction plan. Originally our mapping was:
+* No flex: stop
+* Half flex: turn servo clockwise
+* Full flex: turn servo counterclockwise
+
+To make the game feel more responsive and reduce confusion, we changed the following:
+* Least flex: turn servo clockwise faster
+* Less flex: turn servo clockwise slower
+* Half flex: stop
+* More flex: turn servo counterclockwise slower
+* Most flex: turn servo counterclockwise faster
+We also removed the signal averaging we were doing as that made the game feel unresponsive.
+ 
+
 [Zach plays solo](https://photos.app.goo.gl/uBBdr7Vkce5WfSMp9)
+
+
+## Outcome
+
+In the end the mechanics of the game worked fairly well. For new users the learning curve was fairly quick, although there were moments where it was clear that the interaction wasn't entirely intuitive. For example, it was not uncommon for users to forget that they needed to hold a half flex to keep the board still. They also commonly forgot which arm controlled which axis of rotation. Testers were able to get fairly far into the puzzle, although an invididual user could have very wide variance in how well they do, which is not surprising given that the controls are less fine tuned than your hands. 
 
 ## Lessons learned
 
