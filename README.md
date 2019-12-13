@@ -43,6 +43,8 @@ Play: Once users are ready to play, they (or possibly someone else) will need to
 
 [Two servos hooked up](https://photos.app.goo.gl/J16m6d5j8TJG6g228)
 
+[Zach plays solo](https://photos.app.goo.gl/uBBdr7Vkce5WfSMp9)
+
 ## Lessons learned
 
 * Initially we tried a moving average of signals to determine which way to move, however through playing the game we found that it was better to be more responsive and subject to noise than less responsive and smooth.
